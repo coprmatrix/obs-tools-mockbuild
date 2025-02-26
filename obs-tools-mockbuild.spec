@@ -1,5 +1,5 @@
 Name: obs-tools-mockbuild
-Version: 0
+Version: 1
 Release: 0
 Summary: obs tools mockbuild
 License: LGPL
@@ -9,6 +9,7 @@ Requires: obs-tools
 Requires: pam
 Requires: sudo
 Requires: bash
+BuildArch: noarch
 
 %description
 used to leverage mockbuild sudo
@@ -21,8 +22,8 @@ cat << EOF > %{buildroot}%{_sysconfdir}/sudoers.d/mockbuild
 mockbuild ALL=(ALL) NOPASSWD: ALL
 EOF
 
-cat << EOF > %{buildroot}%{_bindir}/obs_mockbuild
-#!/bin/bash
+cat << 'EOF' > %{buildroot}%{_bindir}/obs_mockbuild
+#!/bin/bash -x
 pushd "${1:-.}"
 sudo obs_pkg_install
 obs_service_run
