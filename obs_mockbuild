@@ -1,0 +1,29 @@
+#!/bin/bash -x
+pushd "${1:-.}"
+
+ITERATIONS="${ITERATIONS:-25}"
+ITERATIONS="${ITERATIONS:-$2}"
+
+TIMEOUT="${TIMEOUT:-250}"
+TIMEOUT="${TIMEOUT:-$3}"
+
+sudo bash -x -c "pkg_check_available ${ITERATIONS} ${TIMEOUT} "'`obs_service_pkg_list` ; obs_pkg_install'
+obs_service_run
+
+buildcheck=""
+
+typeset -a variables=()
+while IFS= read -r line; do
+   if [[ -n "$line" ]]
+   then
+       variables+=("$line")
+       buildcheck="y"
+   fi
+done <<< `rpmspec --query --buildrequires .osc.temp/_output_dir/*.spec`
+
+if [[ "$buildcheck" == "y" ]]
+then
+    sudo pkg_check_available "${ITERATIONS}" "${TIMEOUT}" "${variables[@]}"
+fi
+
+popd
