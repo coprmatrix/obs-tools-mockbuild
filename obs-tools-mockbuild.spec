@@ -4,10 +4,13 @@ Release: 0
 Summary: obs tools mockbuild
 License: LGPL
 URL: https://example.com
+Requires: obs-tools-pkg-checkaval
 Requires: obs-tools-pkg
 Requires: obs-tools
 Requires: pam
+Requires: rpm-build
 Requires: sudo
+BuildRequires: coreutils
 Requires: bash
 BuildArch: noarch
 
@@ -25,8 +28,23 @@ EOF
 cat << 'EOF' > %{buildroot}%{_bindir}/obs_mockbuild
 #!/bin/bash -x
 pushd "${1:-.}"
-sudo obs_pkg_install
+
+ITERATIONS="${ITERATIONS:-25}"
+ITERATIONS="${ITERATIONS:-$2}"
+
+TIMEOUT="${TIMEOUT:-250}"
+TIMEOUT="${TIMEOUT:-$3}"
+
+sudo bash -x -c "pkg_check_available ${ITERATIONS} ${TIMEOUT} "'`obs_service_list` ; obs_pkg_install'
 obs_service_run
+
+typeset -a variables=()
+while IFS= read -r line; do
+    variables+=("$line")
+done <<< `rpmspec --query --buildrequires .osc.temp/_output_dir/*.spec)`
+
+pkg_check_available "${ITERATIONS}" "${TIMEOUT}" "${variables[@]}"
+
 popd
 EOF
 
