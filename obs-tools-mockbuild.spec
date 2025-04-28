@@ -1,5 +1,5 @@
 Name: obs-tools-mockbuild
-Version: 2
+Version: 3
 Release: 0
 Summary: obs tools mockbuild
 License: LGPL
