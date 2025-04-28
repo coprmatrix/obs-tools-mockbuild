@@ -11,8 +11,15 @@ Requires: pam
 Requires: rpm-build
 Requires: sudo
 Requires: bash
+BuildRequires: ksh
 BuildArch: noarch
 Source0:  obs_mockbuild
+
+%prep
+echo a
+
+%generate_buildrequires
+echo xonsh
 
 %description
 used to leverage mockbuild sudo
