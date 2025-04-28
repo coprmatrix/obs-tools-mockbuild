@@ -35,7 +35,7 @@ ITERATIONS="${ITERATIONS:-$2}"
 TIMEOUT="${TIMEOUT:-250}"
 TIMEOUT="${TIMEOUT:-$3}"
 
-sudo bash -x -c "pkg_check_available ${ITERATIONS} ${TIMEOUT} "'`obs_service_list` ; obs_pkg_install'
+sudo bash -x -c "pkg_check_available ${ITERATIONS} ${TIMEOUT} "'`obs_service_pkg_list` ; obs_pkg_install'
 obs_service_run
 
 typeset -a variables=()
